@@ -269,7 +269,6 @@ const MongodbCluster = () => {
         </Col>
       </Row>
 
-      {/* clusster drawer  */}
       {isCreateCluster &&
         <Drawer
           title={formData._id === '' ? "Create Cluster" : "Update Cluster"}
