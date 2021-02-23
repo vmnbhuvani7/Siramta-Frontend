@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Row, Col, Drawer, Collapse } from 'antd';
 import { Button } from 'antd';
 import { Input } from 'antd';
-import { Table } from 'antd';
+import { Table, Switch } from 'antd';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { PlusOutlined } from '@ant-design/icons';
@@ -28,12 +28,9 @@ const PostgreSqlCluster = () => {
 
   const apiService = new ApiService()
   const [isCreateCluster, setIsCreateCluster] = useState(false);
-  // const [isLoading, setIsLoading] = useState(false);
-  // const [isSaving, setIsSaving] = useState(false);
   const [clusterList, setClusterList] = useState([]);
   const [clusterListData, setClusterListData] = useState([]);
   const [formData, setFormData] = useState(initialState);
-  // const [isClusterModal, setIsClusterModal] = useState(false);
   const [isLoadingCreateCluster, setIsLoadingCreateCluster] = useState(false);
   const [selectedStorage, setSelectedStorage] = useState([]);
   const [baseUrl, setBaseUrl] = useState('');
@@ -45,7 +42,6 @@ const PostgreSqlCluster = () => {
 
 
   const getCluster = async () => {
-    // setIsLoading(true)
     const data = await apiService.getCluster('PostgreSQL')
     if (data.status === 200) {
       setClusterList(data.data);
@@ -63,12 +59,7 @@ const PostgreSqlCluster = () => {
             tags: [item],
           }
         ])
-      }
-      )
-      // setClusterListData(data.data)
-      // setIsLoading(false);
-    } else {
-      // setIsLoading(false);
+      })
     }
   }
 
@@ -82,18 +73,9 @@ const PostgreSqlCluster = () => {
     setIsCreateCluster(false);
   };
 
-  // const handleRamModalCancel = () => {
-  //   setFormData(initialState);
-  //   setIsClusterModal(false);
-  // };
-
   const onChangeText = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value })
   }
-
-  // const onModalOpen = () => {
-  //   setIsClusterModal(!isClusterModal)
-  // };
 
   const onSelectStorage = (record) => {
     setSelectedStorage(record)
@@ -141,8 +123,6 @@ const PostgreSqlCluster = () => {
   };
 
   const clusterCreate = async () => {
-    // setIsClusterModal(false);
-    // setIsSaving(true)
     const payload = {
       cluster_name: formData.clusterName,
       user_name: formData.userName,
@@ -164,11 +144,8 @@ const PostgreSqlCluster = () => {
           setClusterList(clone)
           setFormData(initialState);
           setIsCreateCluster(false)
-          // setIsSaving(false)
           window.location.reload()
         }, 3000)
-      } else {
-        // setIsSaving(false)
       }
     } else {
       const newPayload = {
@@ -187,11 +164,8 @@ const PostgreSqlCluster = () => {
           }
           setFormData(initialState);
           setIsCreateCluster(false)
-          // setIsSaving(false)
           window.location.reload()
         }, 3000)
-      } else {
-        // setIsSaving(false)
       }
     }
   };
@@ -230,33 +204,6 @@ const PostgreSqlCluster = () => {
     { key: "1", ram: "1 GB", hardDrive: "12 GB" },
     { key: "2", ram: "512 MB", hardDrive: "8 GB" },
   ]
-
-  // const columns = [
-  //   {
-  //     title: 'RAM',
-  //     dataIndex: 'ram',
-  //     key: 'ram',
-  //   },
-  //   {
-  //     title: 'Hard Drive',
-  //     dataIndex: 'hardDrive',
-  //     key: 'hardDrive',
-  //   },
-  // ];
-
-  // rowSelection objects indicates the need for row selection
-  // const rowSelection = {
-  //   onChange: (selectedRowKeys, selectedRows) => {
-  //     setSelectedStorage(selectedRows)
-  //     console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-  //   },
-  //   onSelect: (record, selected, selectedRows) => {
-  //     console.log(record, selected, selectedRows);
-  //   },
-  //   onSelectAll: (selected, selectedRows, changeRows) => {
-  //     console.log(selected, selectedRows, changeRows);
-  //   },
-  // };
 
   const clusterListColumns = [
     {
@@ -308,7 +255,6 @@ const PostgreSqlCluster = () => {
           <Button type="primary" onClick={onOpenClusterDrawer}>
             <PlusOutlined /> Create Cluster
         </Button>
-          {/* <Button type="primary" onClick={onOpenClusterDrawer}> Create Cluster</Button> */}
         </Col>
       </Row>
 
@@ -337,7 +283,7 @@ const PostgreSqlCluster = () => {
             </div>
           }
         >
-          <Collapse>
+          <Collapse accordion>
             <Panel header="Cloud Provider & Region" key="1">
               <img src={allImage} alt="AWS logo" />
             </Panel>
@@ -374,20 +320,22 @@ const PostgreSqlCluster = () => {
                 <Input.Password placeholder="Password" name='password' value={formData.password} onChange={onChangeText} id='password' />
                 <label>Url: </label>
                 <Input placeholder="Url" name='url' value={formData.url} onChange={onChangeText} id='url' />
-
-                <Row style={{ marginTop: 15 }}>
-                  {/* <Col span={6}><Button type="primary" onClick={onModalOpen}>Select RAM & SSD</Button></Col> */}
-                  <Col span={6}></Col>
-                  <Col span={6}></Col>
-                  <Col span={6}></Col>
-                  <Col span={6}>
-                    {isLoadingCreateCluster ? <Button type="primary" loading>Loading</Button>
-                      : <Button type="primary" onClick={onCreateCluster}>{formData._id === '' ? "Create Cluster" : "Update Cluster"}</Button>
-                    }</Col>
-                </Row>
               </Form>
             </Panel>
+            <Panel header="Backup" key="4">
+              Backup: <Switch defaultChecked style={{ marginLeft: 8 }} />
+            </Panel>
           </Collapse>
+          <Row style={{ marginTop: 15 }}>
+            <Col span={6}></Col>
+            <Col span={6}></Col>
+            <Col span={6}></Col>
+            <Col span={6}>
+              {isLoadingCreateCluster ? <Button type="primary" loading>Loading</Button>
+                : <Button type="primary" onClick={onCreateCluster}>{formData._id === '' ? "Create Cluster" : "Update Cluster"}</Button>
+              }</Col>
+          </Row>
+
         </Drawer>
       }
 
