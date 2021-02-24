@@ -246,7 +246,7 @@ const PostgreSqlCluster = () => {
 
   return (
     <>
-      <Row style={{ marginTop: 20 }}>
+      <Row style={{ paddingTop: 20 }}>
         <Col span={4}></Col>
         <Col span={14}>
           <h1>PostgreSQL clusters</h1>

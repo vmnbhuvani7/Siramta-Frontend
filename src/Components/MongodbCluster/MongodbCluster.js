@@ -174,35 +174,35 @@ const MongodbCluster = () => {
     }
   };
 
-  const onDelete = async (record, i) => {
-    if (window.confirm("Are you sure you want to delete this record ?")) {
-      const data = await apiService.clusterDelete(record[0]._id)
-      if (data.status === 200) {
-        toast.error("Delete cluster successfully!")
-        setTimeout(function () {
-          const clone = [...clusterList];
-          const index = clone.findIndex((x) => x._id === record[0]._id)
-          if (index > -1) {
-            clone.splice(index, 1)
-            setClusterList(clone)
-            window.location.reload()
-          }
-        }, 3000);
-      }
-    }
-  };
+  // const onDelete = async (record, i) => {
+  //   if (window.confirm("Are you sure you want to delete this record ?")) {
+  //     const data = await apiService.clusterDelete(record[0]._id)
+  //     if (data.status === 200) {
+  //       toast.error("Delete cluster successfully!")
+  //       setTimeout(function () {
+  //         const clone = [...clusterList];
+  //         const index = clone.findIndex((x) => x._id === record[0]._id)
+  //         if (index > -1) {
+  //           clone.splice(index, 1)
+  //           setClusterList(clone)
+  //           window.location.reload()
+  //         }
+  //       }, 3000);
+  //     }
+  //   }
+  // };
 
-  const onEdit = (record) => {
-    setFormData({
-      _id: record[0]._id,
-      clusterName: record[0].cluster_name,
-      userName: record[0].user_name,
-      password: record[0].password,
-      ram: record[0].RAM,
-      ssd: record[0].SSD
-    })
-    setIsCreateCluster(true)
-  };
+  // const onEdit = (record) => {
+  //   setFormData({
+  //     _id: record[0]._id,
+  //     clusterName: record[0].cluster_name,
+  //     userName: record[0].user_name,
+  //     password: record[0].password,
+  //     ram: record[0].RAM,
+  //     ssd: record[0].SSD
+  //   })
+  //   setIsCreateCluster(true)
+  // };
 
   const storageList = [
     { key: "1", ram: "1 GB", hardDrive: "12 GB" },
@@ -234,23 +234,23 @@ const MongodbCluster = () => {
       key: 'RAM',
       render: (index) => <Link to={'/cluster-detail/' + index._id}>{index.RAM}</Link>,
     },
-    {
-      title: 'Action',
-      key: 'tags',
-      dataIndex: 'tags',
-      width: '23%',
-      render: tags => (
-        <>
-          <Button type="primary" onClick={() => onEdit(tags)} style={{ marginRight: 5 }}>Edit </Button>
-          <Button type="primary" danger onClick={() => onDelete(tags)}>Delete</Button>
-        </>
-      ),
-    },
+    // {
+    //   title: 'Action',
+    //   key: 'tags',
+    //   dataIndex: 'tags',
+    //   width: '23%',
+    //   render: tags => (
+    //     <>
+    //       <Button type="primary" onClick={() => onEdit(tags)} style={{ marginRight: 5 }}>Edit </Button>
+    //       <Button type="primary" danger onClick={() => onDelete(tags)}>Delete</Button>
+    //     </>
+    //   ),
+    // },
   ];
 
   return (
     <>
-      <Row style={{ marginTop: 20 }}>
+      <Row style={{ paddingTop: 20 }}>
         <Col span={4}></Col>
         <Col span={14}>
           <h1>MongoDB clusters</h1>
@@ -265,7 +265,7 @@ const MongodbCluster = () => {
       <Row style={{ marginTop: 20 }}>
         <Col span={3}></Col>
         <Col span={18}>
-          <Table columns={clusterListColumns} dataSource={clusterListData} />
+          <Table columns={clusterListColumns} dataSource={clusterListData} pagination={false}/>
         </Col>
       </Row>
 

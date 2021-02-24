@@ -31,7 +31,7 @@ const PostgreSqlClusterDetail = (props) => {
 
     return (
         <>
-            <Row style={{ marginTop: 20 }}>
+            <Row style={{ paddingTop: 20 }}>
                 <Col span={9}></Col>
                 <Col style={{ marginLeft: 8 }}>
                     <h1>PostgreSQL Cluster Detail</h1>
