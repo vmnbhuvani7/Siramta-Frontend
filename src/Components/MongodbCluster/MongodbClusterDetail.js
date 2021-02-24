@@ -1,21 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import { PlusOutlined } from '@ant-design/icons';
 import { Button, Col, Row, Table } from 'antd';
 import { Tabs } from 'antd';
+import { Space } from 'antd';
 
 import ApiService from '../../ApiService';
-import { Link } from 'react-router-dom';
-import { PlusOutlined } from '@ant-design/icons';
-
-import { Tag, Space } from 'antd';
-
 
 const { TabPane } = Tabs;
 const MongodbClusterDetail = (props) => {
 
     const [clusterData, setClusterData] = useState({})
-    const [isClusterModal, setIsClusterModal] = useState(false);
-    const [clusterListData, setClusterListData] = useState([]);
-
 
     let apiService = new ApiService()
     let id = props.match.params.id;
@@ -32,170 +26,89 @@ const MongodbClusterDetail = (props) => {
         }
     }
 
-    const callback = (key) => {
-        setIsClusterModal(!isClusterModal)
-    }
-
-    // const clusterListColumns = [
-    //     {
-    //         title: 'Sr no.',
-    //         dataIndex: 'sr_no',
-    //         key: 'sr_no',
-    //         render: (index) => <Link to={'/MySQL-detail/' + index[1]}>{index[0] + 1}</Link>,
-    //     },
-    //     {
-    //         title: 'Cluster Name',
-    //         dataIndex: 'cluster_name',
-    //         key: '2',
-    //         render: (index) => <Link to={'/MySQL-detail/' + index[1]._id}>{index[0]}</Link>,
-    //     },
-    //     {
-    //         title: 'User Name',
-    //         dataIndex: 'user_name',
-    //         key: 'user_name',
-    //         render: (index) => <Link to={'/MySQL-detail/' + index[1]._id}>{index[0]}</Link>,
-    //     },
-    //     {
-    //         title: 'RAM',
-    //         dataIndex: 'RAM',
-    //         key: 'RAM',
-    //         render: (index) => <Link to={'/MySQL-detail/' + index._id}>{index.RAM}</Link>,
-    //     },
-    //     {
-    //         title: 'Action',
-    //         key: 'tags',
-    //         dataIndex: 'tags',
-    //         width: '23%',
-    //         render: tags => (
-    //             <>
-    //                 <Button type="primary"
-    //                     // Click={() => onEdit(tags)}
-    //                     style={{ marginRight: 5 }}>Edit </Button>
-    //                 <Button type="primary" danger
-    //                 //  onClick={() => onDelete(tags)}
-    //                 >Delete</Button>
-    //             </>
-    //         ),
-    //     },
-    // ];
-
-
-    const columns = [
+    const columnsOfNetwork = [
         {
             title: 'User name',
-            dataIndex: 'name',
-            key: 'name',
-            render: text => <a>{text}</a>,
+            dataIndex: 'userName',
+            key: 'userName',
         },
         {
             title: 'Authentication Method',
-            dataIndex: 'age',
-            key: 'age',
+            dataIndex: 'authenticationMethod',
+            key: 'authenticationMethod',
         },
         {
             title: 'MongoDB Roles',
-            dataIndex: 'address',
-            key: 'address',
+            dataIndex: 'mongoDBRoles',
+            key: 'mongoDBRoles',
         },
         {
             title: 'Resources',
-            dataIndex: 'place',
-            key: 'place',
+            dataIndex: 'resources',
+            key: 'resources',
         },
-        // {
-        //     title: 'Action',
-        //     key: 'tags',
-        //     dataIndex: 'tags',
-        //     render: tags => (
-        //         <>   
-        //             {tags.map(tag => {
-        //                 let color = tag.length > 5 ? 'geekblue' : 'green';
-        //                 if (tag === 'loser') {
-        //                     color = 'volcano';
-        //                 }
-        //                 return (
-        //                     <Tag color={color} key={tag}>
-        //                         {tag.toUpperCase()}
-        //                     </Tag>
-        //                 );
-        //             })}
-        //         </>
-        //     ),
-        // },
         {
             title: 'Action',
             key: 'action',
-            render: (text, record) => (
+            render: (text) => (
                 <Space size="middle">
-                    {/* <a>Invite {record.name}</a>
-                    <a>Delete</a> */}
-
-                    <Button type="primary"
-                        //  onClick={() => onEdit(tags)}
-                        style={{ marginRight: 5 }}>Edit </Button>
-                    <Button type="primary" danger
-                    // onClick={() => onDelete(tags)}
-                    >Delete</Button>
+                    <Button type="primary" style={{ marginRight: 5 }}>{text.tags[0]} </Button>
+                    <Button type="primary" danger>{text.tags[1]}</Button>
                 </Space>
             ),
         },
     ];
-    const columns1 = [
+
+    const columnsOfDatabase = [
         {
             title: 'IP address',
-            dataIndex: 'name',
-            key: 'name',
-            render: text => <a>{text}</a>,
+            dataIndex: 'ipAddress',
+            key: 'ipAddress',
         },
         {
             title: 'Comment',
-            dataIndex: 'age',
-            key: 'age',
+            dataIndex: 'comment',
+            key: 'comment',
         },
         {
             title: 'Status',
             dataIndex: 'status',
             key: 'status',
+            render: (text) => (
+                <Space>
+                    <input type="radio" checked />
+                    <p>{text}</p>
+                </Space>
+            ),
         },
         {
             title: 'Action',
             key: 'action',
-            render: (text, record) => (
+            render: (text) => (
                 <Space size="middle">
-                    {/* <a>Invite {record.name}</a>
-                    <a>Delete</a> */}
-
-                    <Button type="primary"
-                        //  onClick={() => onEdit(tags)}
-                        style={{ marginRight: 5 }}>Edit </Button>
-                    <Button type="primary" danger
-                    // onClick={() => onDelete(tags)}
-                    >Delete</Button>
+                    <Button type="primary" style={{ marginRight: 5 }}>{text.tags[0]}</Button>
+                    <Button type="primary" danger >{text.tags[1]}</Button>
                 </Space>
             ),
         },
     ];
 
-    const data1 = [
-        {
-            key: '1',
-            name: 'test1',
-            age: 32,
-            address: 'test address1',
-            status: 'test status 1',
-            tags: ['nice', 'developer'],
-        },
-    ];
-    const data = [
-        {
-            key: '1',
-            name: 'test1',
-            age: 32,
-            address: 'test address1',
-            place: 'Test resource1',
-            tags: ['nice', 'developer'],
-        },
-    ];
+    const dataOfNetwork = [{
+        key: '1',
+        userName: 'dev040',
+        authenticationMethod: 'SCRAM',
+        mongoDBRoles: 'test@admin',
+        resources: 'All Resources',
+        tags: ['Edit', 'Delete'],
+    }];
+
+    const dataOfDatabase = [{
+        key: '1',
+        ipAddress: '0.0.0.0/0',
+        comment: 'no comment',
+        status: 'test status',
+        tags: ['Edit', 'Delete'],
+    }];
 
     return (
         <>
@@ -207,10 +120,10 @@ const MongodbClusterDetail = (props) => {
             </Row>
 
             <Row style={{ marginTop: 20 }}>
-                <Col span={1}></Col>
-                <Tabs defaultActiveKey="1" onChange={callback}>
+                <Col span={5}></Col>
+                <Tabs defaultActiveKey="1">
                     <TabPane tab="Cluster Detail" key="1">
-                        {isClusterModal && <table>
+                        <table>
                             <tbody>
                                 <tr>
                                     <th>Cluster Name: </th>
@@ -234,53 +147,23 @@ const MongodbClusterDetail = (props) => {
                                 </tr>
                             </tbody>
                         </table>
-                        }
                     </TabPane>
 
                     <TabPane tab="Network" key="2">
-                        {/* Content of Tab Pane 2 */}
-
-
-                        <Row style={{ marginTop: 20 }}>
-                            <Col span={1}></Col>
-                            <Col span={18}>
-                                {/* <Table columns={clusterListColumns} dataSource={clusterListData} /> */}
-                                <Row style={{ paddingTop: 20 }}>
-                                    <Col span={4}></Col>
-                                    <Col span={14}>
-                                        <h1>MongoDB clusters</h1>
-                                    </Col>
-                                    <Col>
-                                        <Button type="primary">
-                                            <PlusOutlined /> Create Cluster
-                                         </Button>
-                                    </Col>
-                                </Row>
-                                <Table columns={columns} dataSource={data} pagination={false} />
-                            </Col>
+                        <Row style={{ display: "flex", justifyContent: "flex-end", marginBottom: 20 }}>
+                            <Button type="primary">
+                                <PlusOutlined /> Add IP Address
+                            </Button>
                         </Row>
+                        <Table columns={columnsOfNetwork} dataSource={dataOfNetwork} pagination={false} />
                     </TabPane>
                     <TabPane tab="Database user" key="3">
-                        {/* Content of Tab Pane 3 */}
-
-                        <Row style={{ marginTop: 20 }}>
-                            <Col span={3}></Col>
-                            <Col span={18}>
-                                <Row style={{ paddingTop: 20 }}>
-                                    <Col span={1}></Col>
-                                    <Col span={14}>
-                                        <h1>Database user</h1>
-                                    </Col>
-                                    <Col>
-                                        <Button type="primary">
-                                            <PlusOutlined /> Create Cluster
-                                         </Button>
-                                    </Col>
-                                </Row>
-                                <Table columns={columns1} dataSource={data1} pagination={false} />
-                                {/* <Table columns={clusterListColumns} dataSource={clusterListData} /> */}
-                            </Col>
+                        <Row style={{ display: "flex", justifyContent: "flex-end", marginBottom: 20 }}>
+                            <Button type="primary">
+                                <PlusOutlined /> Add New DataBase User
+                            </Button>
                         </Row>
+                        <Table columns={columnsOfDatabase} dataSource={dataOfDatabase} pagination={false} />
                     </TabPane>
                 </Tabs>
             </Row>
