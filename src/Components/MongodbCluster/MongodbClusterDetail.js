@@ -26,7 +26,7 @@ const MongodbClusterDetail = (props) => {
         }
     }
 
-    const columnsOfNetwork = [
+    const columnsOfDatabase = [
         {
             title: 'User name',
             dataIndex: 'userName',
@@ -59,7 +59,7 @@ const MongodbClusterDetail = (props) => {
         },
     ];
 
-    const columnsOfDatabase = [
+    const columnsOfNetwork = [
         {
             title: 'IP address',
             dataIndex: 'ipAddress',
@@ -75,10 +75,10 @@ const MongodbClusterDetail = (props) => {
             dataIndex: 'status',
             key: 'status',
             render: (text) => (
-                <Space>
-                    <input type="radio" checked />
-                    <p>{text}</p>
-                </Space>
+                <div style={{ display: "flex" }}>
+                    <input type="radio" checked style={{ marginTop: 5 }} />
+                    <p style={{ marginBottom: 0, marginLeft: 5 }}>{text}</p>
+                </div>
             ),
         },
         {
@@ -93,7 +93,7 @@ const MongodbClusterDetail = (props) => {
         },
     ];
 
-    const dataOfNetwork = [{
+    const dataOfDatabase = [{
         key: '1',
         userName: 'dev040',
         authenticationMethod: 'SCRAM',
@@ -102,7 +102,7 @@ const MongodbClusterDetail = (props) => {
         tags: ['Edit', 'Delete'],
     }];
 
-    const dataOfDatabase = [{
+    const dataOfNetwork = [{
         key: '1',
         ipAddress: '0.0.0.0/0',
         comment: 'no comment',
@@ -120,7 +120,7 @@ const MongodbClusterDetail = (props) => {
             </Row>
 
             <Row style={{ marginTop: 20 }}>
-                <Col span={5}></Col>
+                <Col span={6}></Col>
                 <Tabs defaultActiveKey="1">
                     <TabPane tab="Cluster Detail" key="1">
                         <table>
@@ -150,12 +150,14 @@ const MongodbClusterDetail = (props) => {
                     </TabPane>
 
                     <TabPane tab="Network" key="2">
-                        <Row style={{ display: "flex", justifyContent: "flex-end", marginBottom: 20 }}>
-                            <Button type="primary">
-                                <PlusOutlined /> Add IP Address
+                        <div>
+                            <Row style={{ display: "flex", justifyContent: "flex-end", marginBottom: 20 }}>
+                                <Button type="primary">
+                                    <PlusOutlined /> Add IP Address
                             </Button>
-                        </Row>
-                        <Table columns={columnsOfNetwork} dataSource={dataOfNetwork} pagination={false} />
+                            </Row>
+                            <Table width='50%' columns={columnsOfNetwork} dataSource={dataOfNetwork} pagination={false} />
+                        </div>
                     </TabPane>
                     <TabPane tab="Database user" key="3">
                         <Row style={{ display: "flex", justifyContent: "flex-end", marginBottom: 20 }}>
