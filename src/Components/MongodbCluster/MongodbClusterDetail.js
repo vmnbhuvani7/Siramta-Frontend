@@ -180,29 +180,33 @@ const MongodbClusterDetail = (props) => {
                                     bodyStyle={{ paddingBottom: 80 }}
 
 
-                                // footer={
-                                //     <div
-                                //         style={{
-                                //             textAlign: 'right',
-                                //         }}
-                                //     >
-                                //         <Button style={{ marginRight: 8 }} onClick={handleCancel}> Cancel </Button>
-                                //         <Button type="primary" onClick={clusterCreate}> Submit </Button>
-                                //     </div>
-                                // }
+                                    footer={
+                                        <div
+                                            style={{
+                                                textAlign: 'right',
+                                            }}
+                                        >
+                                            <Button style={{ marginRight: 8 }}
+                                            // onClick={handleCancel}
+                                            > Cancel </Button>
+                                            <Button type="primary"
+                                            //  onClick={clusterCreate}
+                                            > Submit </Button>
+                                        </div>
+                                    }
                                 >
-                                    <h1>Add Ip Access List Entry</h1>
+                                    <h1 style={{margin:'18%'}}>Add Ip Access List Entry</h1>
                                     <Form layout="vertical" hideRequiredMark>
-                                        <label>Cluster Name: </label>
-                                        <Input placeholder="Cluster Name" name='clusterName'
+                                        <label>Ip Address: </label>
+                                        <Input placeholder="Ip Address" name='ipaddress'
                                             //  value={formData.clusterName} 
                                             // onChange={onChangeText} 
-                                            id='clusterName' />
-                                        <label>User Name: </label>
-                                        <Input placeholder="User Name" name='userName'
+                                            id='ipaddress' />
+                                        <label>Comment: </label>
+                                        <Input placeholder="Comment" name='comment'
                                             // value={formData.userName}
                                             //  onChange={onChangeText}
-                                            id='userName' />
+                                            id='comment' />
                                     </Form>
                                 </Drawer>
                             }
