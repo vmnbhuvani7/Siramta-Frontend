@@ -10,6 +10,9 @@ const { TabPane } = Tabs;
 const MongodbClusterDetail = (props) => {
 
     const [clusterData, setClusterData] = useState({})
+    const [isCreateCluster, setIsCreateCluster] = useState(false);
+
+
 
     let apiService = new ApiService()
     let id = props.match.params.id;
@@ -110,6 +113,11 @@ const MongodbClusterDetail = (props) => {
         tags: ['Edit', 'Delete'],
     }];
 
+    const createIpAddress = () => {
+        // setFormData(initialState);
+        setIsCreateCluster((isCreateCluster) => !isCreateCluster);
+      };
+
     return (
         <>
             <Row style={{ paddingTop: 20 }}>
@@ -152,7 +160,7 @@ const MongodbClusterDetail = (props) => {
                     <TabPane tab="Network" key="2">
                         <div>
                             <Row style={{ display: "flex", justifyContent: "flex-end", marginBottom: 20 }}>
-                                <Button type="primary">
+                                <Button type="primary"  onClick={createIpAddress}>
                                     <PlusOutlined /> Add IP Address
                             </Button>
                             </Row>
