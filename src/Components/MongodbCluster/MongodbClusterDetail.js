@@ -197,7 +197,7 @@ const MongodbClusterDetail = (props) => {
                                 >
                                     <h2>Add Ip Access List Entry</h2>
                                     <hr style={{marginBottom:'8%'}}/>
-                                    <Form layout="vertical" hideRequiredMark>
+                                    <Form style={{margin:'3%'}} layout="vertical" hideRequiredMark>
                                         <label>Ip Address: </label>
                                         <Input placeholder="Ip Address" name='ipaddress'
                                             //  value={formData.clusterName} 
