@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Col, Drawer, Row, Table } from 'antd';
+import { Button, Col, Drawer, Input, Row, Table } from 'antd';
 import { Tabs } from 'antd';
 import { Space } from 'antd';
 
 import ApiService from '../../ApiService';
+import Form from 'antd/lib/form/Form';
 
 const { TabPane } = Tabs;
 const MongodbClusterDetail = (props) => {
@@ -177,6 +178,8 @@ const MongodbClusterDetail = (props) => {
                                     onClose={handleCancel}
                                     visible={isCreateCluster}
                                     bodyStyle={{ paddingBottom: 80 }}
+
+
                                 // footer={
                                 //     <div
                                 //         style={{
@@ -187,7 +190,21 @@ const MongodbClusterDetail = (props) => {
                                 //         <Button type="primary" onClick={clusterCreate}> Submit </Button>
                                 //     </div>
                                 // }
-                                ></Drawer>
+                                >
+                                    <h1>Add Ip Access List Entry</h1>
+                                    <Form layout="vertical" hideRequiredMark>
+                                        <label>Cluster Name: </label>
+                                        <Input placeholder="Cluster Name" name='clusterName'
+                                            //  value={formData.clusterName} 
+                                            // onChange={onChangeText} 
+                                            id='clusterName' />
+                                        <label>User Name: </label>
+                                        <Input placeholder="User Name" name='userName'
+                                            // value={formData.userName}
+                                            //  onChange={onChangeText}
+                                            id='userName' />
+                                    </Form>
+                                </Drawer>
                             }
                             <Table width='50%' columns={columnsOfNetwork} dataSource={dataOfNetwork} pagination={false} />
                         </div>
