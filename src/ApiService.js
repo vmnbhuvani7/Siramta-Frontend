@@ -1,5 +1,6 @@
 import axios from "axios";
-const api = "https://gentle-garden-74127.herokuapp.com/api/v1";
+const api = "https://safe-hamlet-24147.herokuapp.com/api/v1";
+// const api = "https://gentle-garden-74127.herokuapp.com/api/v1";
 // const api = "http://65.1.60.227:4040/api/v1";
 
 export class ApiService {
