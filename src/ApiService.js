@@ -13,7 +13,7 @@ export class ApiService {
     };
     let resData = '';
     const response = await axios.get(url, data, config).catch((err) => {
-      resData = {error: 'something went wrong'};
+      resData = { error: 'something went wrong' };
     });
     return resData || response.data;
   }
@@ -33,7 +33,7 @@ export class ApiService {
       if (thrown.toString() === 'Cancel') {
         resData = 'cancel';
       } else {
-        resData = {error: 'something went wrong'};;
+        resData = { error: 'something went wrong' };;
       }
     });
     return resData || response.data;
@@ -47,7 +47,7 @@ export class ApiService {
     };
     let resData = '';
     const response = await axios.put(url, data, config).catch(err => {
-      resData = {error: 'something went wrong'};
+      resData = { error: 'something went wrong' };
     });
     return resData || response.data;
   }
@@ -60,49 +60,61 @@ export class ApiService {
     };
     let resData = '';
     const response = await axios.delete(url, config).catch(err => {
-      resData = {error: 'something went wrong'};
+      resData = { error: 'something went wrong' };
     });
     return resData || response.data;
   }
 
-  async clusterById(url, headers){
-      const config = {
-        headers: {
-          ...(headers || {})
-        }
+  async clusterById(url, headers) {
+    const config = {
+      headers: {
+        ...(headers || {})
       }
-      let resData = ''
-      const response = await axios.get(url, config).catch(err =>{
-        resData = {error: 'Something went wrong'};
-      });
-      return resData || response.data;
+    }
+    let resData = ''
+    const response = await axios.get(url, config).catch(err => {
+      resData = { error: 'Something went wrong' };
+    });
+    return resData || response.data;
   }
 
-  async getCluster(payload){
-    return await this.getData(`${api}/cluster/?cluster_for=${payload}`,'');
+  async getCluster(payload) {
+    return await this.getData(`${api}/cluster/?cluster_for=${payload}`, '');
   }
-  async runScriptCluster(payload){
-    return await this.postMethod(`${api}/cluster/runscript`,payload);
+  async getDatabaseUser() {
+    return await this.getData(`${api}/databaseUser`, '');
   }
-  async runScriptPostgres(payload){
-    return await this.postMethod(`${api}/cluster/runScriptForPostgres`,payload);
+  async getNetwork() {
+    return await this.getData(`${api}/network`, '');
   }
-  async runScriptMySQL(payload){
-    return await this.postMethod(`${api}/cluster/runScriptForMySQL`,payload);
+  async runScriptCluster(payload) {
+    return await this.postMethod(`${api}/cluster/runscript`, payload);
   }
-  async runScriptUpdateCluster(payload){
-    return await this.postMethod(`${api}/cluster/updatescript`,payload);
+  async runScriptPostgres(payload) {
+    return await this.postMethod(`${api}/cluster/runScriptForPostgres`, payload);
   }
-  async clusterCreate(payload){
-    return await this.postMethod(`${api}/cluster/create`,payload);
+  async runScriptMySQL(payload) {
+    return await this.postMethod(`${api}/cluster/runScriptForMySQL`, payload);
   }
-  async clusterUpdate(payload){
-    return await this.putMethod(`${api}/cluster/`,payload);
+  async runScriptUpdateCluster(payload) {
+    return await this.postMethod(`${api}/cluster/updatescript`, payload);
   }
-  async clusterDelete(id){
+  async clusterCreate(payload) {
+    return await this.postMethod(`${api}/cluster/create`, payload);
+  }
+  async databaseUserCreate(payload) {
+    return await this.postMethod(`${api}/databaseUser/create`, payload);
+  }
+  async networkCreate(payload) {
+    return await this.postMethod(`${api}/network/create`, payload);
+  }
+  async clusterUpdate(payload) {
+    return await this.putMethod(`${api}/cluster/`, payload);
+  }
+  async clusterDelete(id) {
     return await this.deleteMethod(`${api}/cluster/${id}`);
   }
-  async getClusterById(id){
+  async getClusterById(id) {
     return await this.clusterById(`${api}/cluster/${id}`);
   }
 }
