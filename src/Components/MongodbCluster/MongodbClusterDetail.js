@@ -195,14 +195,15 @@ const MongodbClusterDetail = (props) => {
                                         </div>
                                     }
                                 >
-                                    <h1 style={{margin:'18%'}}>Add Ip Access List Entry</h1>
+                                    <h2>Add Ip Access List Entry</h2>
+                                    <hr style={{marginBottom:'8%'}}/>
                                     <Form layout="vertical" hideRequiredMark>
                                         <label>Ip Address: </label>
                                         <Input placeholder="Ip Address" name='ipaddress'
                                             //  value={formData.clusterName} 
                                             // onChange={onChangeText} 
                                             id='ipaddress' />
-                                        <label>Comment: </label>
+                                        <label >Comment: </label>
                                         <Input placeholder="Comment" name='comment'
                                             // value={formData.userName}
                                             //  onChange={onChangeText}
