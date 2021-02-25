@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Col, Row, Table } from 'antd';
+import { Button, Col, Drawer, Row, Table } from 'antd';
 import { Tabs } from 'antd';
 import { Space } from 'antd';
 
@@ -116,7 +116,12 @@ const MongodbClusterDetail = (props) => {
     const createIpAddress = () => {
         // setFormData(initialState);
         setIsCreateCluster((isCreateCluster) => !isCreateCluster);
-      };
+    };
+
+    const handleCancel = () => {
+        // setFormData(initialState);
+        setIsCreateCluster(false);
+    };
 
     return (
         <>
@@ -160,10 +165,30 @@ const MongodbClusterDetail = (props) => {
                     <TabPane tab="Network" key="2">
                         <div>
                             <Row style={{ display: "flex", justifyContent: "flex-end", marginBottom: 20 }}>
-                                <Button type="primary"  onClick={createIpAddress}>
+                                <Button type="primary" onClick={createIpAddress}>
                                     <PlusOutlined /> Add IP Address
                             </Button>
                             </Row>
+                            {
+                                isCreateCluster &&
+                                <Drawer
+                                    // title={formData._id === '' ? "Create Cluster" : "Update Cluster"}
+                                    width={560}
+                                    onClose={handleCancel}
+                                    visible={isCreateCluster}
+                                    bodyStyle={{ paddingBottom: 80 }}
+                                // footer={
+                                //     <div
+                                //         style={{
+                                //             textAlign: 'right',
+                                //         }}
+                                //     >
+                                //         <Button style={{ marginRight: 8 }} onClick={handleCancel}> Cancel </Button>
+                                //         <Button type="primary" onClick={clusterCreate}> Submit </Button>
+                                //     </div>
+                                // }
+                                ></Drawer>
+                            }
                             <Table width='50%' columns={columnsOfNetwork} dataSource={dataOfNetwork} pagination={false} />
                         </div>
                     </TabPane>
