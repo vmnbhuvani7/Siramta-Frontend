@@ -37,6 +37,7 @@ const MongodbCluster = () => {
   const [portUrl, setPortUrl] = useState('');
 
   useEffect(() => {
+    localStorage.setItem("tab_key", 1)
     getCluster()
   }, [])
 
@@ -265,7 +266,7 @@ const MongodbCluster = () => {
       <Row style={{ marginTop: 20 }}>
         <Col span={3}></Col>
         <Col span={18}>
-          <Table columns={clusterListColumns} dataSource={clusterListData} pagination={false}/>
+          <Table columns={clusterListColumns} dataSource={clusterListData} pagination={false} />
         </Col>
       </Row>
 

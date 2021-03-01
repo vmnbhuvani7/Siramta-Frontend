@@ -13,9 +13,9 @@ const { TabPane } = Tabs;
 const initialState = {
     user_name: "",
     password: "",
-    authenticationMethod: "",
-    mongoDBRoles: "",
-    resources: "",
+    authentication_method: "",
+    mongodb_roles: "",
+    // resources: "",
 }
 
 const initialStateNetwork = {
@@ -34,15 +34,19 @@ const MongodbClusterDetail = (props) => {
     const [networkFormData, setNetworkFormData] = useState(initialStateNetwork);
     const [databaseUSerData, setDatabaseUSerData] = useState([]);
     const [networkData, setNetworkData] = useState([]);
-
+    const [showPassword, setShowPassword] = useState(true);
 
     let id = props.match.params.id;
+
+    const [form] = Form.useForm();
+    React.useEffect(() => {
+    }, [formData]);
 
     useEffect(() => {
         getClusterDetail()
         getDatabaseUser()
         getNetwork()
-    }, [])
+    }, [networkFormData, formData])
 
     const getClusterDetail = async () => {
         const data = await apiService.getClusterById(id);
@@ -85,10 +89,10 @@ const MongodbClusterDetail = (props) => {
         setFormData({ ...formData, [event.target.name]: event.target.value })
     };
     const onChangeAuthentication = (text) => {
-        setFormData({ ...formData, authenticationMethod: text })
+        setFormData({ ...formData, authentication_method: text })
     };
     const onChangeRoles = (text) => {
-        setFormData({ ...formData, mongoDBRoles: text })
+        setFormData({ ...formData, mongodb_roles: text })
     };
     const onChangeNetworkText = (event) => {
         setNetworkFormData({ ...networkFormData, [event.target.name]: event.target.value })
@@ -96,7 +100,12 @@ const MongodbClusterDetail = (props) => {
 
     const onCreateDatabaseUser = async () => {
         setIsLoadingCreateCluster(true)
-        const data = await apiService.databaseUserCreate(formData)
+        let data
+        if (formData._id) {
+            data = await apiService.databaseUserUpdate(formData)
+        } else {
+            data = await apiService.databaseUserCreate(formData)
+        }
         if (data.status === 200) {
             toast.success("Create Database User Successfully!")
             setTimeout(function () {
@@ -104,6 +113,8 @@ const MongodbClusterDetail = (props) => {
                 setIsLoadingCreateCluster(false)
                 window.location.reload()
             }, 3000)
+        } else {
+            toast.error(data)
         }
     }
 
@@ -119,6 +130,41 @@ const MongodbClusterDetail = (props) => {
             }, 3000)
         }
     }
+    const onNetworkDelete = async (item) => {
+        if (window.confirm("Are you sure you want to delete this record ?")) {
+            const data = await apiService.networkDelete(item._id)
+            if (data.status === 200) {
+                toast.error("Delete cluster successfully!")
+                setTimeout(function () {
+                    window.location.reload()
+                }, 3000);
+            } else {
+                toast.error(data)
+            }
+        }
+    };
+    const onDatabaseDelete = async (item) => {
+        if (window.confirm("Are you sure you want to delete this record ?")) {
+            const data = await apiService.databaseDelete(item._id)
+            if (data.status === 200) {
+                toast.error("Delete cluster successfully!")
+                setTimeout(function () {
+                    window.location.reload()
+                }, 3000);
+            } else {
+                toast.error(data)
+            }
+        }
+    };
+    const onDatabaseEdit = (item) => {
+        setIsCreateCluster(true)
+        setShowPassword(false)
+        setFormData(item)
+    }
+    const callback = (key) => {
+        localStorage.setItem("tab_key", key)
+    }
+
     const columnsOfDatabase = [
         {
             title: 'User name',
@@ -135,18 +181,18 @@ const MongodbClusterDetail = (props) => {
             dataIndex: 'mongodb_roles',
             key: 'mongodb_roles',
         },
-        {
-            title: 'Resources',
-            dataIndex: 'resources',
-            key: 'resources',
-        },
+        // {
+        //     title: 'Resources',
+        //     dataIndex: 'resources',
+        //     key: 'resources',
+        // },
         {
             title: 'Action',
             key: 'action',
-            render: (text) => (
+            render: (item) => (
                 <Space size="middle">
-                    <Button type="primary" style={{ marginRight: 5 }}>Edit </Button>
-                    <Button type="primary" danger>Delete</Button>
+                    <Button type="primary" style={{ marginRight: 5 }} onClick={() => onDatabaseEdit(item)}>Edit </Button>
+                    <Button type="primary" danger onClick={() => onDatabaseDelete(item)}>Delete</Button>
                 </Space>
             ),
         },
@@ -183,16 +229,13 @@ const MongodbClusterDetail = (props) => {
         {
             title: 'Action',
             key: 'action',
-            render: () => (
+            render: (item) => (
                 <Space size="middle">
-                    <Button type="primary" danger >Delete</Button>
+                    <Button type="primary" danger onClick={() => onNetworkDelete(item)} >Delete</Button>
                 </Space>
             ),
         },
     ];
-
-    console.log("formData@@!@!", formData);
-
     return (
         <>
             {isCreateCluster &&
@@ -224,38 +267,37 @@ const MongodbClusterDetail = (props) => {
                             name="user_name"
                             label="User name:"
                         >
-                            <Input placeholder="User Name" name='user_name' value={formData.user_name} onChange={onChangeText} id='user_name' />
+                            <Input placeholder="User Name" name='user_name' defaultValue={formData.user_name} onChange={(e) => onChangeText(e)} id='user_name' />
                         </Form.Item>
                         {/* <label>Password: </label> */}
-                        <Form.Item
+                        {showPassword && <Form.Item
                             name="password"
                             label="Password:"
                         >
-                            <Input.Password placeholder="Password" name='password' value={formData.password} onChange={onChangeText} id='password' />
+                            <Input.Password placeholder="Password" name='password' value={formData.password} onChange={(e) => onChangeText(e)} id='password' />
                         </Form.Item>
+                        }
                         <Form.Item
-                            name="authenticationMethod"
+                            name="authentication_method"
                             label="Authentication Method:"
                         >
-                            <Select placeholder="Please select an owner" value={formData.authenticationMethod} name="authenticationMethod" onChange={onChangeAuthentication}>
-                                <Option value="SCRAM" >SCRAM</Option>
+                            <Select placeholder="Please select an owner" defaultValue={formData.authentication_method || "Please select a method"} name="authentication_method" onChange={onChangeAuthentication}>
                                 <Option value="Password" >Password</Option>
-                                <Option value="Certificate" >Certificate</Option>
-                                <Option value="AWS-IAM" >AWS-IAM</Option>
                             </Select>
                         </Form.Item>
                         <Form.Item
-                            name="mongoDBRoles"
+                            name="mongodb_roles"
                             label="MongoDB Roles:"
                         >
-                            <Select placeholder="Please select an owner" value={formData.mongoDBRoles} name="authenticationMethod" onChange={onChangeRoles}>
-                                <Option value="Atlas_Admin" >Atlas_Admin</Option>
-                                <Option value="Read_And_Write" >Read_And_Write</Option>
-                                <Option value="Only_Read" >Only_Read</Option>
+                            <Select placeholder="Please select an owner" defaultValue={formData.mongodb_roles || "Please select a role"} name="mongodb_roles" onChange={onChangeRoles}>
+                                <Option value="Atlas_Admin" >Atlas Admin</Option>
+                                <Option value="Read_And_Write" >Read And Write</Option>
+                                <Option value="Only_Read" >Only Read</Option>
+                                <Option value="Grant_Specific_Privileges" >Grant Specific Privileges</Option>
                             </Select>
                         </Form.Item>
-                        <label>Resources: </label>
-                        <Input placeholder="Resources" name='resources' value={formData.resources} onChange={onChangeText} id='resources' />
+                        {/* <label>Resources: </label>
+                        <Input placeholder="Resources" name='resources' value={formData.resources} onChange={onChangeText} id='resources' /> */}
 
 
                     </Form>
@@ -312,7 +354,7 @@ const MongodbClusterDetail = (props) => {
 
             <Row style={{ marginTop: 20 }}>
                 <Col span={6}></Col>
-                <Tabs defaultActiveKey="1">
+                <Tabs defaultActiveKey={localStorage.getItem("tab_key")} onChange={callback}>
                     <TabPane tab="Cluster Detail" key="1">
                         <table>
                             <tbody>
@@ -320,10 +362,10 @@ const MongodbClusterDetail = (props) => {
                                     <th>Cluster Name: </th>
                                     <td style={{ paddingLeft: 10 }}>{clusterData.cluster_name}</td>
                                 </tr>
-                                <tr>
+                                {/* <tr>
                                     <th>User Name: </th>
                                     <td style={{ paddingLeft: 10 }}>{clusterData.user_name}</td>
-                                </tr>
+                                </tr> */}
                                 <tr>
                                     <th>RAM: </th>
                                     <td style={{ paddingLeft: 10 }}>{clusterData.RAM}</td>

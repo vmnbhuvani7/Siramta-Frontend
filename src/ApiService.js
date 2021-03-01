@@ -111,8 +111,17 @@ export class ApiService {
   async clusterUpdate(payload) {
     return await this.putMethod(`${api}/cluster/`, payload);
   }
+  async databaseUserUpdate(payload) {
+    return await this.putMethod(`${api}/databaseUser/`, payload);
+  }
   async clusterDelete(id) {
     return await this.deleteMethod(`${api}/cluster/${id}`);
+  }
+  async networkDelete(id) {
+    return await this.deleteMethod(`${api}/network/${id}`);
+  }
+  async databaseDelete(id) {
+    return await this.deleteMethod(`${api}/databaseUser/${id}`);
   }
   async getClusterById(id) {
     return await this.clusterById(`${api}/cluster/${id}`);
