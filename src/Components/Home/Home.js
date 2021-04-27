@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 
 import mongodb from '../../images/mongodb.png';
 import mysql from '../../images/mysql.png';
-import PostgreSqlCluster from '../../images/postgreSql.png';
+import PostgreSqlCluster from '../../images/postgresql.png';
 
 const Home = () => {
   let history = useHistory();

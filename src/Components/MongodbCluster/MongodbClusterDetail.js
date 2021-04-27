@@ -6,11 +6,13 @@ import { Space } from 'antd';
 import { toast } from 'react-toastify';
 
 import ApiService from '../../ApiService';
+import { useHistory } from 'react-router-dom';
 
 const { Option } = Select;
 const { TabPane } = Tabs;
 
 const initialState = {
+    cluster: "",
     user_name: "",
     password: "",
     authentication_method: "",
@@ -19,6 +21,7 @@ const initialState = {
 }
 
 const initialStateNetwork = {
+    cluster: "",
     ip_address: "",
     comment: "",
 }
@@ -38,9 +41,13 @@ const MongodbClusterDetail = (props) => {
 
     let id = props.match.params.id;
 
+    const history = useHistory()
+
     const [form] = Form.useForm();
     React.useEffect(() => {
     }, [formData]);
+
+    console.log("cluster data", clusterData);
 
     useEffect(() => {
         getClusterDetail()
@@ -50,26 +57,27 @@ const MongodbClusterDetail = (props) => {
 
     const getClusterDetail = async () => {
         const data = await apiService.getClusterById(id);
+        console.log(data.data._id);
         if (data.status === 200) {
             setClusterData(data.data)
         }
     }
 
     const getDatabaseUser = async () => {
-        const data = await apiService.getDatabaseUser()
+        const data = await apiService.getClusterById(id)
         if (data.status === 200) {
-            setDatabaseUSerData(data.data)
+            setDatabaseUSerData(data.data.database_user)
         }
     }
     const getNetwork = async () => {
-        const data = await apiService.getNetwork()
+        const data = await apiService.getClusterById(id)
         if (data.status === 200) {
-            console.log("data.data", data.data);
-            setNetworkData(data.data)
+            setNetworkData(data.data.network)
         }
     }
 
     const onOpenClusterDrawer = () => {
+        setShowPassword(true)
         setFormData(initialState);
         setIsCreateCluster((isCreateCluster) => !isCreateCluster);
     };
@@ -86,7 +94,7 @@ const MongodbClusterDetail = (props) => {
     };
 
     const onChangeText = (event) => {
-        setFormData({ ...formData, [event.target.name]: event.target.value })
+        setFormData({ ...formData, cluster: id, [event.target.name]: event.target.value })
     };
     const onChangeAuthentication = (text) => {
         setFormData({ ...formData, authentication_method: text })
@@ -94,8 +102,9 @@ const MongodbClusterDetail = (props) => {
     const onChangeRoles = (text) => {
         setFormData({ ...formData, mongodb_roles: text })
     };
+
     const onChangeNetworkText = (event) => {
-        setNetworkFormData({ ...networkFormData, [event.target.name]: event.target.value })
+        setNetworkFormData({ ...networkFormData, cluster: id, [event.target.name]: event.target.value })
     };
 
     const onCreateDatabaseUser = async () => {
@@ -134,7 +143,7 @@ const MongodbClusterDetail = (props) => {
         if (window.confirm("Are you sure you want to delete this record ?")) {
             const data = await apiService.networkDelete(item._id)
             if (data.status === 200) {
-                toast.error("Delete cluster successfully!")
+                toast.error("Delete Network successfully!")
                 setTimeout(function () {
                     window.location.reload()
                 }, 3000);
@@ -147,7 +156,7 @@ const MongodbClusterDetail = (props) => {
         if (window.confirm("Are you sure you want to delete this record ?")) {
             const data = await apiService.databaseDelete(item._id)
             if (data.status === 200) {
-                toast.error("Delete cluster successfully!")
+                toast.error("Delete Database User successfully!")
                 setTimeout(function () {
                     window.location.reload()
                 }, 3000);
@@ -156,9 +165,25 @@ const MongodbClusterDetail = (props) => {
             }
         }
     };
+
+    const onClusterDelete = async (id) => {
+        if (window.confirm("Are you sure you want to delete this record ?")) {
+            const data = await apiService.clusterDelete(id)
+            if (data.status === 200) {
+                toast.error("Delete Cluster successfully!")
+                setTimeout(function () {
+                    history.push('/mongodb-cluster')
+                    // window.location.reload()
+                }, 3000);
+            } else {
+                toast.error(data)
+            }
+        }
+    };
+
     const onDatabaseEdit = (item) => {
         setIsCreateCluster(true)
-        setShowPassword(false)
+        setShowPassword(true)
         setFormData(item)
     }
     const callback = (key) => {
@@ -256,7 +281,7 @@ const MongodbClusterDetail = (props) => {
                             {isLoadingCreateCluster ? <Button type="primary" loading>Loading</Button>
                                 : <Button onClick={onCreateDatabaseUser} type="primary">
                                     Submit
-</Button>
+                                </Button>
                             }
                         </div>
                     }
@@ -297,7 +322,7 @@ const MongodbClusterDetail = (props) => {
                             </Select>
                         </Form.Item>
                         {/* <label>Resources: </label>
-                        <Input placeholder="Resources" name='resources' value={formData.resources} onChange={onChangeText} id='resources' /> */}
+                                <Input placeholder="Resources" name='resources' value={formData.resources} onChange={onChangeText} id='resources' /> */}
 
 
                     </Form>
@@ -319,11 +344,11 @@ const MongodbClusterDetail = (props) => {
                         >
                             <Button onClick={handleCancelNetwork} style={{ marginRight: 8 }}>
                                 Cancel
-              </Button>
+                            </Button>
                             {isLoadingCreateCluster ? <Button type="primary" loading>Loading</Button>
                                 : <Button type="primary" onClick={onCreateNetwork}>
                                     Submit
-              </Button>
+                                </Button>
                             }
                         </div>
                     }
@@ -348,7 +373,7 @@ const MongodbClusterDetail = (props) => {
             <Row style={{ paddingTop: 20 }}>
                 <Col span={9}></Col>
                 <Col style={{ marginLeft: 8 }} >
-                    <h1>MongoDB Cluster Detail</h1>
+                    <h1>{clusterData.cluster_name} Cluster Detail</h1>
                 </Col>
             </Row>
 
@@ -363,9 +388,9 @@ const MongodbClusterDetail = (props) => {
                                     <td style={{ paddingLeft: 10 }}>{clusterData.cluster_name}</td>
                                 </tr>
                                 {/* <tr>
-                                    <th>User Name: </th>
-                                    <td style={{ paddingLeft: 10 }}>{clusterData.user_name}</td>
-                                </tr> */}
+                                            <th>User Name: </th>
+                                            <td style={{ paddingLeft: 10 }}>{clusterData.user_name}</td>
+                                        </tr> */}
                                 <tr>
                                     <th>RAM: </th>
                                     <td style={{ paddingLeft: 10 }}>{clusterData.RAM}</td>
@@ -387,7 +412,7 @@ const MongodbClusterDetail = (props) => {
                             <Row style={{ display: "flex", justifyContent: "flex-end", marginBottom: 20 }}>
                                 <Button type="primary" onClick={onOpenNetworkDrawer}>
                                     <PlusOutlined /> Add IP Address
-                            </Button>
+                                    </Button>
                             </Row>
                             <Table width='50%' columns={columnsOfNetwork} dataSource={networkData} pagination={false} />
                         </div>
@@ -396,9 +421,20 @@ const MongodbClusterDetail = (props) => {
                         <Row style={{ display: "flex", justifyContent: "flex-end", marginBottom: 20 }}>
                             <Button type="primary" onClick={onOpenClusterDrawer}>
                                 <PlusOutlined /> Add New DataBase User
-                            </Button>
+                                    </Button>
                         </Row>
                         <Table columns={columnsOfDatabase} dataSource={databaseUSerData} pagination={false} />
+                    </TabPane>
+                    <TabPane tab="Setting" key="4">
+                        <Button type="primary" danger onClick={() => onClusterDelete(clusterData._id)}>Delete Cluster</Button>
+                        {/* <div>
+                                    <Row style={{ display: "flex", justifyContent: "flex-end", marginBottom: 20 }}>
+                                        <Button type="primary" onClick={onOpenNetworkDrawer}>
+                                            <PlusOutlined /> Add IP Address
+                                    </Button>
+                                    </Row>
+                                    <Table width='50%' columns={columnsOfNetwork} dataSource={networkData} pagination={false} />
+                                </div> */}
                     </TabPane>
                 </Tabs>
             </Row>
